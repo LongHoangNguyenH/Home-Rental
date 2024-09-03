@@ -1,38 +1,47 @@
 import React, { useState } from "react";
-import "../styles/Login.scss";
-import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom";
+import "../styles/Login.scss"
 import { setLogin } from "../redux/state";
-
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const handleSubmit = async(e)=>{
-    e.preventDefault();
-    try{
-      const response = await fetch("http://localhost:3001/auth/login",{
+
+  const dispatch = useDispatch()
+
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const response = await fetch ("http://localhost:3001/auth/login", {
         method: "POST",
-        body: JSON.stringify({email, password}),
-      });
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      })
 
-      const LoggedIn = await response.json();
+      /* Get data after fetching */
+      const loggedIn = await response.json()
 
-      if(LoggedIn){
-        dispatch(
+      if (loggedIn) {
+        dispatch (
           setLogin({
-            user: LoggedIn.user,
-            token: LoggedIn.token
+            user: loggedIn.user,
+            token: loggedIn.token
           })
         )
-        navigate("/");
+        navigate("/")
       }
-    }catch(err){
-      console.log("Login failed!", err.message);
+
+    } catch (err) {
+      console.log("Login failed", err.message)
     }
   }
+
   return (
     <div className="login">
       <div className="login_content">
@@ -51,9 +60,9 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Login</button>
+          <button type="submit">LOG IN</button>
         </form>
-        <a href="/register">Don't have an account? Register</a>
+        <a href="/register">Don't have an account? Sign In Here</a>
       </div>
     </div>
   );
