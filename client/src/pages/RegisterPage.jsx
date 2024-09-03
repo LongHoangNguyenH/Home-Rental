@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Register.scss";
+import { useNavigate } from "react-router-dom";
+
 
 const RegisterPage = () => {
   const [formData, setFormdata] = useState({
@@ -12,26 +14,78 @@ const RegisterPage = () => {
   });
 
   const handleOnChange = (e) => {
-    const {name, value, files} = e.target;
+    const { name, value, files } = e.target;
     setFormdata({
-        ...formData,
-        [name]: value,
-        [name]: name === 'profileImage' ? files[0] : value
-    })
-  }
+      ...formData,
+      [name]: value,
+      [name]: name === "profileImage" ? files[0] : value,
+    });
+  };
+
+  const navigate = useNavigate();
+  const [passwordMatch, setPasswordMatch] = useState(true);
+
+  useEffect(() => {
+    setPasswordMatch(
+      formData.password === formData.confirmPassword ||
+        formData.confirmPassword === ""
+    );
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const register_form = new FormData();
+      for (var key in formData) {
+        register_form.append(key, formData[key]);
+      }
+      const response = await fetch("http://localhost:3001/auth/register", {
+        method: "POST",
+        body: register_form,
+      });
+
+      console.log(response);
+      if (response.ok) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log("Registration failed", error.message);
+    }
+  };
+
   console.log(formData);
   return (
     <div className="register">
       <div className="register_content">
-        <form className="register_content_form">
-          <input placeholder="First Name" name="firstName" onChange={handleOnChange} required />
-          <input placeholder="Last Name" name="lastName" onChange={handleOnChange} required />
-          <input placeholder="Email" name="email" type="email" onChange={handleOnChange} required />
+        <form className="register_content_form" onSubmit={handleSubmit}>
+          <input
+            placeholder="First Name"
+            name="firstName"
+            onChange={handleOnChange}
+            value={formData.firstName}
+            required
+          />
+          <input
+            placeholder="Last Name"
+            name="lastName"
+            onChange={handleOnChange}
+            value={formData.lastName}
+            required
+          />
+          <input
+            placeholder="Email"
+            name="email"
+            type="email"
+            onChange={handleOnChange}
+            value={formData.email}
+            required
+          />
           <input
             placeholder="Password"
             name="password"
             type="password"
             onChange={handleOnChange}
+            value={formData.password}
             required
           />
           <input
@@ -39,8 +93,14 @@ const RegisterPage = () => {
             name="confirmPassword"
             type="password"
             onChange={handleOnChange}
+            value={formData.confirmPassword}
             required
           />
+
+          {!passwordMatch && (
+            <p style={{ color: "red" }}>Password do not match</p>
+          )}
+
           <input
             id="image"
             type="file"
