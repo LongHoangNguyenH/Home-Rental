@@ -8,6 +8,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { IoIosImages } from "react-icons/io";
 import { BiTrash } from "react-icons/bi";
 const CreateListing = () => {
+  /* UPLOAD, DRAG & DROP, REMOVE PHOTOS */
   const [photos, setPhotos] = useState([]);
   const handleUploadPhotos = (e) => {
     const newPhotos = e.target.files;
@@ -203,9 +204,130 @@ const CreateListing = () => {
                 </div>
               ))}
             </div>
+
+            <h3>Add some photos of your place</h3>
+            <DragDropContext onDragEnd={handleDragPhotos}>
+              <Droppable droppableId="photos" direction="horizontal">
+                {(provided) => (
+                  <div
+                    className="photos"
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    {photos.length < 1 && (
+                      <>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleUploadPhotos}
+                          multiple
+                          style={{ display: "none" }}
+                        />
+                        <label htmlFor="image" className="alone">
+                          <div className="icon">
+                            <IoIosImages />
+                          </div>
+                          <p>Upload from your device</p>
+                        </label>
+                      </>
+                    )}
+
+                    {photos.length >= 1 && (
+                      <>
+                        {photos.map((photo, index) => {
+                          return (
+                            <Draggable
+                              key={index}
+                              draggableId={index.toString()}
+                              index={index}
+                            >
+                              {(provided) => (
+                                <div
+                                  className="photo"
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <img
+                                    src={URL.createObjectURL(photo)}
+                                    alt="place"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemovePhoto(index)}
+                                  >
+                                    <BiTrash />
+                                  </button>
+                                </div>
+                              )}
+                            </Draggable>
+                          );
+                        })}
+                        <input
+                          id="image"
+                          type="file"
+                          style={{ display: "none" }}
+                          accept="image/*"
+                          onChange={handleUploadPhotos}
+                          multiple
+                        />
+                        <label htmlFor="image" className="together">
+                          <div className="icon">
+                            <IoIosImages />
+                          </div>
+                          <p>Upload from your device</p>
+                        </label>
+                      </>
+                    )}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+
+            <h3>What make your place attractive and exciting?</h3>
+            <div className="description">
+              <p>Title</p>
+              <input type="text" placeholder="Title" name="title" required />
+
+              <p>Description</p>
+              <input
+                type="text"
+                placeholder="Description"
+                name="description"
+                required
+              />
+
+              <p>Hightlight</p>
+              <input
+                type="text"
+                placeholder="Hightlight"
+                name="highlight"
+                required
+              />
+
+              <p>Hightlight details</p>
+              <textarea
+                type="text"
+                placeholder="Hightlight details"
+                name="highlightDesc"
+                required
+              />
+
+              <p>Now, Set your Price</p>
+              <span>$</span>
+              <input
+                type="number"
+                placeholder="100"
+                name="price"
+                className="price"
+                required
+              />
+            </div>
           </div>
 
-          
+          <button className="submit_btn" type="submit">
+            CREATE YOUR LISTING
+          </button>
         </form>
       </div>
     </>
