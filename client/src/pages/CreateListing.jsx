@@ -10,13 +10,15 @@ import { BiTrash } from "react-icons/bi";
 const CreateListing = () => {
   /* UPLOAD, DRAG & DROP, REMOVE PHOTOS */
   const [photos, setPhotos] = useState([]);
+
   const handleUploadPhotos = (e) => {
     const newPhotos = e.target.files;
-    setPhotos((previousPhotos) => [...previousPhotos, ...newPhotos]);
+    setPhotos((prevPhotos) => [...prevPhotos, ...newPhotos]);
   };
 
-  const handleDragPhotos = (result) => {
+  const handleDragPhoto = (result) => {
     if (!result.destination) return;
+
     const items = Array.from(photos);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
@@ -25,8 +27,8 @@ const CreateListing = () => {
   };
 
   const handleRemovePhoto = (indexToRemove) => {
-    setPhotos((previousPhotos) =>
-      previousPhotos.filter((_, index) => index !== indexToRemove)
+    setPhotos((prevPhotos) =>
+      prevPhotos.filter((_, index) => index !== indexToRemove)
     );
   };
   return (
@@ -206,7 +208,7 @@ const CreateListing = () => {
             </div>
 
             <h3>Add some photos of your place</h3>
-            <DragDropContext onDragEnd={handleDragPhotos}>
+            <DragDropContext onDragEnd={handleDragPhoto}>
               <Droppable droppableId="photos" direction="horizontal">
                 {(provided) => (
                   <div
@@ -217,11 +219,12 @@ const CreateListing = () => {
                     {photos.length < 1 && (
                       <>
                         <input
+                          id="image"
                           type="file"
+                          style={{ display: "none" }}
                           accept="image/*"
                           onChange={handleUploadPhotos}
                           multiple
-                          style={{ display: "none" }}
                         />
                         <label htmlFor="image" className="alone">
                           <div className="icon">
