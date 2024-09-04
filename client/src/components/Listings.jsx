@@ -1,32 +1,36 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { categories } from "../data";
 import "../styles/Listings.scss";
+import ListingCard from "./ListingCard";
+import Loader from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { setListings } from "../redux/state";
-import Loader from "./Loader";
-import ListingCard from "./ListingCard";
 
 const Listings = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
   const listings = useSelector((state) => state.listings);
+  console.log(listings);
 
   const getFeedListings = async () => {
     try {
       const response = await fetch(
-        selectedCategory !== "all"
+        selectedCategory !== "All"
           ? `http://localhost:3001/properties?category=${selectedCategory}`
-          : `http://localhost:3001/properties`,
+          : "http://localhost:3001/properties",
         {
           method: "GET",
         }
       );
+
       const data = await response.json();
       dispatch(setListings({ listings: data }));
       setLoading(false);
-    } catch (error) {
-      console.log("Fetch Listings Failed", error.message);
+    } catch (err) {
+      console.log("Fetch Listings Failed", err.message);
     }
   };
 
@@ -34,7 +38,6 @@ const Listings = () => {
     getFeedListings();
   }, [selectedCategory]);
 
-  console.log(listings);
   return (
     <>
       <div className="category-list">
@@ -51,11 +54,12 @@ const Listings = () => {
           </div>
         ))}
       </div>
+
       {loading ? (
         <Loader />
       ) : (
         <div className="listings">
-          {listings?.map(
+          {listings.map(
             ({
               _id,
               creator,

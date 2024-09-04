@@ -89,4 +89,16 @@ router.get("/", async (req, res) => {
     console.log(error);
   }
 });
+
+/* LISTING DETAILs  */
+router.get("/:listingId", async (req, res) => {
+  try{
+    const listingId = req.params.listingId;
+    const listing = await Listing.findById(listingId).populate("creator");
+    res.status(200).json(listing);
+  }catch(error){
+    res.status(500).json({ message: "Failed to get listing details", error: error.message });
+  }
+})
+
 module.exports = router;

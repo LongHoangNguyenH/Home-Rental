@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "../styles/ListingCard.scss";
 import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const ListingCard = ({
-  _id,
+  listingId,
   creator,
   listingPhotoPaths,
   city,
@@ -12,6 +13,9 @@ const ListingCard = ({
   category,
   type,
   price,
+  startDate,
+  endDate,
+  totalPrice,
   booking,
 }) => {
   /* Slider for images */
@@ -27,10 +31,19 @@ const ListingCard = ({
     setCurrentIndex((prevIndex) => (prevIndex + 1) % listingPhotoPaths.length);
   };
 
+  const navigate = useNavigate();
   return (
-    <div className="listing-card">
+    <div
+      className="listing-card"
+      onClick={() => {
+        navigate(`/properties/${listingId}`);
+      }}
+    >
       <div className="slider-container">
-        <div className="slider" style={{transform: `translateX(-${currentIndex * 100}%)`}}>
+        <div
+          className="slider"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
           {listingPhotoPaths?.map((photo, index) => (
             <div className="slide" key={index}>
               <img
@@ -45,19 +58,26 @@ const ListingCard = ({
               >
                 <ArrowBackIosNew sx={{ fontSize: "15px" }} />
               </div>
-              <div className="next-button" onClick={(e) => {
+              <div
+                className="next-button"
+                onClick={(e) => {
                   goToNextSlide(e);
-                }}>
+                }}
+              >
                 <ArrowForwardIos sx={{ fontSize: "15px" }} />
               </div>
             </div>
           ))}
         </div>
       </div>
-      <h3>{city}, {province}, {country}</h3>
+      <h3>
+        {city}, {province}, {country}
+      </h3>
       <p>{category}</p>
       <p>{type}</p>
-      <p><span>${price}</span> per night</p>
+      <p>
+        <span>${price}</span> per night
+      </p>
     </div>
   );
 };
