@@ -17,6 +17,9 @@ export const userSlice = createSlice({
             state.user = null;
             state.token = null;
         },
+        setListings: (state, action) => {
+            state.listings = action.payload.listings
+        }
     }
 })
 
