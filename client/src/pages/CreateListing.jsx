@@ -7,6 +7,8 @@ import variables from "../styles/variables.scss";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { IoIosImages } from "react-icons/io";
 import { BiTrash } from "react-icons/bi";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const CreateListing = () => {
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
@@ -34,7 +36,6 @@ const CreateListing = () => {
   const [bathroomCount, SetbathroomCount] = useState(1);
 
   /* Amenities */
-
   const [amenities, setAmenities] = useState([]);
   const handleSelectAmenities = (facility) => {
     if (amenities.includes(facility)) {
@@ -43,7 +44,6 @@ const CreateListing = () => {
       setAmenities((prev) => [...amenities, facility]);
     }
   };
-  /* Description */
 
   /* DESCRIPTION */
   const [formDescription, setFormDescription] = useState({
@@ -60,7 +60,6 @@ const CreateListing = () => {
       [name]: value,
     });
   };
-  console.log(formDescription);
 
   /* UPLOAD, DRAG & DROP, REMOVE PHOTOS */
   const [photos, setPhotos] = useState([]);
@@ -85,12 +84,56 @@ const CreateListing = () => {
       prevPhotos.filter((_, index) => index !== indexToRemove)
     );
   };
+  const navigate = useNavigate();
+  const creatorId = useSelector((state) => state.user._id);
+  console.log(creatorId, amenities);
+  const handlePost = async (e) => {
+    e.preventDefault();
+    try {
+      /* Create a new FormData onject to handle file uploads */
+      const listingForm = new FormData();
+      listingForm.append("creator", creatorId);
+      listingForm.append("category", category);
+      listingForm.append("type", type);
+      listingForm.append("streetAddress", formLocation.streetAddress);
+      listingForm.append("aptSuite", formLocation.aptSuite);
+      listingForm.append("city", formLocation.city);
+      listingForm.append("province", formLocation.province);
+      listingForm.append("country", formLocation.country);
+      listingForm.append("guestCount", guestCount);
+      listingForm.append("bedroomCount", bedroomCount);
+      listingForm.append("bedCount", bedCount);
+      listingForm.append("bathroomCount", bathroomCount);
+      listingForm.append("amenities", amenities);
+      listingForm.append("title", formDescription.title);
+      listingForm.append("description", formDescription.description);
+      listingForm.append("highlight", formDescription.highlight);
+      listingForm.append("highlightDesc", formDescription.highlightDesc);
+      listingForm.append("price", formDescription.price);
+
+      /* Append each selected photos to the FormData object */
+      photos.forEach((photo) => {
+        listingForm.append("listingPhotos", photo);
+      });
+      /* Send a POST request to server */
+      const response = await fetch("http://localhost:3001/properties/create", {
+        method: "POST",
+        body: listingForm,
+      });
+
+      if (response.ok) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("Publish Listing failed", error.message);
+    }
+  };
   return (
     <>
       <Navbar />
       <div className="create-listing">
         <h1>Publish your Home Rental</h1>
-        <form action="">
+        <form onSubmit={handlePost}>
           <div className="create-listing_step1">
             <h2>Step1: Tell us about your place</h2>
             <br />
@@ -161,7 +204,8 @@ const CreateListing = () => {
                   type="text"
                   placeholder="City"
                   name="city"
-                  onChange={formLocation.city}
+                  value={formLocation.city}
+                  onChange={handleChangeLocation}
                   required
                 />
               </div>
@@ -181,11 +225,13 @@ const CreateListing = () => {
               </div>
 
               <div className="location">
-                <p>City</p>
+                <p>Country</p>
                 <input
                   type="text"
                   placeholder="Country"
                   name="country"
+                  value={formLocation.country}
+                  onChange={handleChangeLocation}
                   required
                 />
               </div>
