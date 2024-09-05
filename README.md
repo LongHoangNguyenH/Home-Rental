@@ -1,8 +1,8 @@
 <div align="center">
   <br />
-    <a href="" target="_blank">
-      <img src="https://github.com/adrianhajdin/healthcare/assets/151519281/a7dd73b6-93de-484d-84e0-e7f4e299167b" alt="Project Banner">
-    </a>
+    <div align="center"> 
+  <img src="https://github.com/LongHoangNguyenH/BookingApplication/blob/main/screenshot.jpg"   alt="screenshot" />
+</div>
   <br />
 
   <div>
@@ -45,13 +45,13 @@ This website is a project about home rent, and these rooms are assorted by many 
 
 👉 **Become a host**: User also can become a host to rent out their property.
 
-👉 **Make their wish list**: Admins can confirm and set appointment times to ensure they are properly scheduled.
+👉 **Make their wish list**: User can make their wish list to find their dream house.
 
-👉 **Managing by trip list**: Administrators have the ability to cancel any appointment as needed.
+👉 **Managing by trip list**: Trip list is a list of places that the user want to visit and they already add to their list.
 
-👉 **Make their properties list**: Patients receive SMS notifications to confirm their appointment details.
+👉 **Make their properties list**: Property list is a list of properties that the user already add to their list.
 
-👉 **Make their Reservation list**: The application works seamlessly on all device types and screen sizes.
+👉 **Make their Reservation list**: Reservation list is a list of reservations that the user already make.
 
 ## <a name="quick-start">🤸 Quick Start</a>
 
