@@ -90,6 +90,29 @@ router.get("/", async (req, res) => {
   }
 });
 
+/* GET LISTINGS BY SEARCH */
+router.get("/search/:search", async(req, res)=>{
+  const { search } = req.params
+  try{
+    let listings = [];
+    if(search=="All"){
+      listings = await Listing.find().populate("creator")
+    }else{
+      listings = await Listing.find({
+        $or: [
+          { category: {$regex: search, $options: "i" } },
+          { title: {$regex: search, $options: "i" } },
+          { description: {$regex: search, $options: "i" } },
+        ]
+      }).populate("creator")
+      res.status(200).json(listings)
+    }
+  }catch(err){
+    console.log(err)
+    res.status(404).json({message: "Failed to search listings", error: err.message})
+  }
+})
+
 /* LISTING DETAILs  */
 router.get("/:listingId", async (req, res) => {
   try {
