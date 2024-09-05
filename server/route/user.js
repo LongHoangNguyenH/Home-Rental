@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Booking = require("../model/Booking");
-
+const User = require("../model/User");
+const Listing = require("../model/Listing");
 /* Get trip list */
 router.get("/:userId/trips", async (req, res) => {
   try {
@@ -17,4 +18,43 @@ router.get("/:userId/trips", async (req, res) => {
   }
 });
 
-module.exports = router
+/* ADD LISTING TO WISH LIST*/
+router.patch("/:userId/:listingId", async (req, res) => {
+  try {
+    const { userId, listingId } = req.params;
+    const user = await User.findById(userId);
+    const listing = await Listing.findById(listingId).populate("creator");
+
+    const favoriteList = user.wishList.find(
+      (item) => item._id.toString() === listingId
+    );
+
+    if (favoriteList) {
+      user.wishList = user.wishList.filter(
+        (item) => item._id.toString() !== listingId
+      );
+      await user.save();
+      res.status(200).json({
+        message: "listing removed from wish list",
+        wishList: user.wishList,
+      });
+    } else {
+      user.wishList.push(listing);
+      await user.save();
+      res.status(200).json({
+        message: "listing added from wish list",
+        wishList: user.wishList,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      message: "cannot add listing to wish list",
+      error: error.message,
+    });
+  }
+});
+
+
+
+module.exports = router;
