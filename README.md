@@ -1,7 +1,7 @@
 <div align="center">
   <br />
     <div align="center"> 
-  <img src="https://github.com/LongHoangNguyenH/BookingApplication/blob/main/screenshot.jpg"   alt="screenshot" />
+  <img src="https://github.com/LongHoangNguyenH/Home-Rental/blob/main/assets/demo.png"   alt="screenshot" />
 </div>
   <br />
 
