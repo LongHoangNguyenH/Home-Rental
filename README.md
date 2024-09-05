@@ -111,4 +111,4 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 To try this application, you can visit this link:
 
-[Home Rental](https://home-rental-frontend.vercel.app/)
+[Home Rental]()
