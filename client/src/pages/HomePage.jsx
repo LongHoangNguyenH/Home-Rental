@@ -12,7 +12,6 @@ const HomePage = () => {
       <Slide />
       <Categories/>
       <Listings/>
-      <ListingDetail/>
     </>
   )
 }

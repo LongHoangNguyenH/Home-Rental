@@ -88,7 +88,7 @@ const ListingDetails = () => {
       console.log("Submit Booking Failed.", err.message);
     }
   };
-  console.log(listing);
+
   return loading ? (
     <Loader />
   ) : (
