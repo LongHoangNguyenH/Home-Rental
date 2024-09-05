@@ -55,6 +55,20 @@ router.patch("/:userId/:listingId", async (req, res) => {
   }
 });
 
-
+/* GET PROPERTY LIST */
+router.get("/:userId/properties", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const properties = await Listing.find({ creator: userId }).populate(
+      "creator"
+    );
+    res.status(200).json(properties);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(404)
+      .json({ message: "cannot find properties", error: error.message });
+  }
+});
 
 module.exports = router;
